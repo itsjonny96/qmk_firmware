@@ -1,4 +1,4 @@
-/* Copyright 2021 @ Keychron (https://www.keychron.com)
+/* Copyright 2020 The Mad Noodle (Jesse Leventhal)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #pragma once
 
-// RGB Matrix Configuration
-#define DRIVER_1_LED_TOTAL 34
-#define DRIVER_2_LED_TOTAL 33
-#define RGB_MATRIX_LED_COUNT (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL)
+#include "quantum.h"
 
-
-
-// Encoder used pins 
-#define ENCODER_DEFAULT_POS 0x3
-
-
-
-// Combos
-#define COMBO_COUNT 2
-
-//Lighting
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_MAX_LAYERS 4
-#define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
+#define LAYOUT_ortho_3x3( \
+      k00, k01, k02, \
+      k10, k11, k12, \
+      k20, k21, k22  \
+) \
+{ \
+    { k00, k01, k02 }, \
+    { k10, k11, k12 }, \
+    { k20, k21, k22 } \
+} 
 
