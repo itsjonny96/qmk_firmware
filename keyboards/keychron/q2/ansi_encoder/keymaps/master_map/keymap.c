@@ -27,8 +27,6 @@ enum layers{
 enum my_keycodes {
     KC_LOCK_SCREEN = SAFE_RANGE,
     KC_SUPER_FILL,
-    // KC_MISSION_CONTROL,
-    // KC_LAUNCHPAD,
     KC_DUAL_AUTH,
 };
 
@@ -48,21 +46,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING("kinit -f && mwinit -o");
             }
-            return false;
-        case KC_MISSION_CONTROL:
-            if (record->event.pressed) {
-                host_consumer_send(0x29F);
-            } else {
-                host_consumer_send(0);
-            }
-            return false;  // Skip all further processing of this key
-        case KC_LAUNCHPAD:
-            if (record->event.pressed) {
-                host_consumer_send(0x2A0);
-            } else {
-                host_consumer_send(0);
-            }
-            return false;  // Skip all further processing of this key   
+            return false; 
         case KC_SUPER_FILL: {
             if (record->event.pressed) {
                 super_fill_key_down = true;
@@ -102,8 +86,6 @@ combo_t key_combos[COMBO_COUNT] = {
 #define KC_WAVE S(KC_GRV)
 #define KC_TASK LGUI(KC_TAB)
 #define KC_FLXP LGUI(KC_E)
-#define KC_MCTL KC_MISSION_CONTROL
-#define KC_LPAD KC_LAUNCHPAD
 #define KC_SPFL KC_SUPER_FILL
 #define KC_DATH KC_DUAL_AUTH
 
@@ -174,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                             KC_RALT, MO(_FN2), MO(_FN3),  KC_LEFT, KC_DOWN, KC_RGHT),
 
     [_FN1] = LAYOUT_ansi_67(
-        KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, KC_MPRV, KC_MNXT, KC_VOLD,  KC_VOLU,   _______,          _______,
+        KC_GRV,  _______, _______, KC_MCTL, KC_LPAD, _______, _______, _______, _______, KC_MPRV, KC_MNXT, KC_VOLD,  KC_VOLU,   _______,          _______,
         _______, _______, KC_UP,   _______, _______, _______, _______, _______, _______, _______, KC_MPLY, _______,  _______,   _______,          KC_PAGE_UP,
         _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______,             KC_PGUP,          KC_PAGE_DOWN,
         _______,         RGB_TOG, RGB_MOD, RGB_RMOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______,             KC_PGDN, _______,
