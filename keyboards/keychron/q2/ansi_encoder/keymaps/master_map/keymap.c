@@ -28,6 +28,7 @@ enum my_keycodes {
     KC_LOCK_SCREEN = SAFE_RANGE,
     KC_SUPER_FILL,
     KC_DUAL_AUTH,
+    KC_DCV_CONNECT
 };
 
 // MACROS
@@ -46,7 +47,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 SEND_STRING("kinit -f && mwinit -o");
             }
-            return false; 
+            return false;
+        case KC_DCV_CONNECT:
+            if (record->event.pressed) {
+                SEND_STRING("python C:\\Users\\joyajj\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
+            }
+            return false;  
         case KC_SUPER_FILL: {
             if (record->event.pressed) {
                 super_fill_key_down = true;
@@ -88,6 +94,7 @@ combo_t key_combos[COMBO_COUNT] = {
 #define KC_FLXP LGUI(KC_E)
 #define KC_SPFL KC_SUPER_FILL
 #define KC_DATH KC_DUAL_AUTH
+#define KC_DCVC KC_DCV_CONNECT
 
 //LIGHTING
 
@@ -173,7 +180,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_WAVE, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,    _______,          _______,
         RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______,  _______,   _______,          KC_BTN3,
         _______, RGB_RMOD,RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, KC_DATH, _______, _______, _______,             KC_HOME,           KC_END,
-        _______,          _______, _______, _______, KC_SPFL, _______, _______, _______, _______, _______, _______,              KC_END, LCMD(KC_UP),
+        _______,          _______, _______, KC_DCVC, KC_SPFL, _______, _______, _______, _______, _______, _______,              KC_END, LCMD(KC_UP),
         _______, _______, _______,                            _______,                            _______, _______,  _______,   _______, LCMD(KC_DOWN), _______)
 };
 
