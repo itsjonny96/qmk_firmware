@@ -28,7 +28,7 @@ enum my_keycodes {
     KC_LOCK_SCREEN = SAFE_RANGE,
     KC_SUPER_FILL,
     KC_DUAL_AUTH,
-    KC_DCV_CONNECT
+    KC_DCV_CONNECT,
 };
 
 // MACROS

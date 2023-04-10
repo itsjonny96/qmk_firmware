@@ -21,13 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 enum my_keycodes {
     KC_LOCK_SCREEN = SAFE_RANGE,
     KC_SUPER_FILL,
-    KC_MISSION_CONTROL,
-    KC_LAUNCHPAD,
+    KC_DUAL_AUTH,
+    KC_DCV_CONNECT,
 };
 
-#define KC_MCTL KC_MISSION_CONTROL
-#define KC_LPAD KC_LAUNCHPAD
+
 #define KC_SPFL KC_SUPER_FILL
+#define KC_DATH KC_DUAL_AUTH
+#define KC_DCVC KC_DCV_CONNECT
 
 #define _BASE 0
 #define _FN1 1
@@ -60,7 +61,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
                 host_consumer_send(0);
             }
-            return false;  // Skip all further processing of this key         
+            return false;  // Skip all further processing of this key
+    case KC_DUAL_AUTH:
+            if (record->event.pressed) {
+                SEND_STRING("kinit -f && mwinit -o");
+            }
+            return false;
+    case KC_DCV_CONNECT:
+            if (record->event.pressed) {
+                SEND_STRING("python C:\\Users\\joyajj\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
+            }        
     case KC_SUPER_FILL: {
             if (record->event.pressed) {
                 super_fill_key_down = true;
@@ -116,8 +126,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_MACROS] = LAYOUT_60_ansi(
   	_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     _______, _______, KC_UP,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______,          KC_HOME,
-    _______, _______, _______, _______, KC_SPFL, _______, _______, _______, _______, _______, _______,                   KC_END,
+    _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_DATH, _______, _______, _______,          KC_HOME,
+    _______, _______, _______, KC_DCVC, KC_SPFL, _______, _______, _______, _______, _______, _______,                   KC_END,
     _______, _______, _______,                            _______,                            _______, _______, _______, QK_BOOT
   )
 };
