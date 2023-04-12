@@ -70,7 +70,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case KC_DCV_CONNECT:
             if (record->event.pressed) {
                 SEND_STRING("python C:\\Users\\joyajj\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
-            }        
+            }
+            return false;        
     case KC_SUPER_FILL: {
             if (record->event.pressed) {
                 super_fill_key_down = true;
@@ -120,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, KC_UP,   _______, _______, _______, _______, _______, _______, _______, KC_MPLY, _______, _______, _______,
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______,          KC_PGUP,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   KC_PGDN,
-    _______, _______, _______,                            _______,                            _______, _______, _______, QK_BOOT
+    _______, _______, _______,                            _______,                            _______, _______, _______, _______
   ), 
   
   [_MACROS] = LAYOUT_60_ansi(
@@ -128,6 +129,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, KC_UP,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, KC_DATH, _______, _______, _______,          KC_HOME,
     _______, _______, _______, KC_DCVC, KC_SPFL, _______, _______, _______, _______, _______, _______,                   KC_END,
-    _______, _______, _______,                            _______,                            _______, _______, _______, QK_BOOT
+    _______, _______, _______,                            _______,                            _______, _______, _______, _______
   )
 };
