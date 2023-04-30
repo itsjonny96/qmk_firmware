@@ -1,8 +1,5 @@
 /*
-This is the c configuration file for the keymap
-
-Copyright 2012 Jun Wako <wakojun@gmail.com>
-Copyright 2015 Jack Humbert
+Copyright 2020 The Mad Noodle (Jesse Leventhal)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,37 +17,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* Select hand configuration */
+#include "config_common.h"
 
-#define MASTER_LEFT
-// #define MASTER_RIGHT
-// #define EE_HANDS
+/* USB Device descriptor parameter */
+#define VENDOR_ID       0xFEED
+#define PRODUCT_ID      0x1701
+#define DEVICE_VER      0x0002
+#define MANUFACTURER    The Mad Noodle
+#define PRODUCT         NCC1701KB v2
+#define DESCRIPTION     NCC1701KB v2 macro keypad
 
-#define QUICK_TAP_TERM 0
-#define TAPPING_TERM 100
+/* key matrix size */
+#define MATRIX_ROWS 3
+#define MATRIX_COLS 3
 
-#undef RGBLED_NUM
-#define RGBLIGHT_EFFECT_BREATHING
-#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-#define RGBLIGHT_EFFECT_SNAKE
-#define RGBLIGHT_EFFECT_KNIGHT
-#define RGBLIGHT_EFFECT_CHRISTMAS
-#define RGBLIGHT_EFFECT_STATIC_GRADIENT
-#define RGBLIGHT_EFFECT_RGB_TEST
-#define RGBLIGHT_EFFECT_ALTERNATING
-#define RGBLIGHT_EFFECT_TWINKLE
-#define RGBLED_NUM 27
-#define RGBLIGHT_LIMIT_VAL 120
-#define RGBLIGHT_HUE_STEP 10
-#define RGBLIGHT_SAT_STEP 17
-#define RGBLIGHT_VAL_STEP 17
+/* NCC-1701-KB PCB default pin-out */
+#define MATRIX_ROW_PINS { D4, D6, D7 }
+#define MATRIX_COL_PINS { B4, B5, B6 }
+#define UNUSED_PINS
 
-#define SPLIT_TRANSACTION_IDS_USER SYNC_POMODORO_RUNNING
-
-// Underglow
-/*
-#undef RGBLED_NUM
-#define RGBLED_NUM 14    // Number of LEDs
+/* RGB BackLight */
+#define RGB_DI_PIN B7
+#define RGBLED_NUM 4
 #define RGBLIGHT_SLEEP
-*/
+#define RGBLIGHT_ANIMATIONS
+/*Encoders */
+#define ENCODERS_PAD_A { D0 }
+#define ENCODERS_PAD_B { D1 }
+
+
+/* COL2ROW or ROW2COL */
+#define DIODE_DIRECTION ROW2COL
