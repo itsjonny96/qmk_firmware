@@ -69,7 +69,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     case KC_DCV_CONNECT:
             if (record->event.pressed) {
-                SEND_STRING("python C:\\Users\\joyajj\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
+                SEND_STRING("python C:\\Users\\joyajj\\dcv\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
             }
             return false;        
     case KC_SUPER_FILL: {
