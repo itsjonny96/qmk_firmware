@@ -15,16 +15,16 @@
     #define RGB_MATRIX_LED_COUNT 6
     #define RGB_MATRIX_KEYPRESSES // reacts to keypresses
     // #define RGB_DISABLE_WHEN_USB_SUSPENDED // turn off effects when suspended
-    #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 100 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
-    #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_COLOR // Sets the default mode, if none has been set
+    #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200 // limits maximum brightness of LEDs to 200 out of 255. If not defined maximum brightness is set to 255
+    #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_BREATHING // Sets the default mode, if none has been set
     // #define RGB_TRIGGER_ON_KEYDOWN      // Triggers RGB keypress events on key down. This makes RGB control feel more responsive. This may cause RGB to not function properly on some boards
 
     // RGB Matrix Animation modes. Explicitly enabled
     // For full list of effects, see: https://docs.qmk.fm/#/feature_rgb_matrix?id=rgb-matrix-effects
-    // #define ENABLE_RGB_MATRIX_SOLID_COLOR
+    #define ENABLE_RGB_MATRIX_SOLID_COLOR
     // #define ENABLE_RGB_MATRIX_ALPHAS_MODS
-    // #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
-    // #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
+    #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
+    #define ENABLE_RGB_MATRIX_GRADIENT_LEFT_RIGHT
     #define ENABLE_RGB_MATRIX_BREATHING
     // #define ENABLE_RGB_MATRIX_BAND_SAT
     // #define ENABLE_RGB_MATRIX_BAND_VAL
@@ -55,16 +55,16 @@
     // #define ENABLE_RGB_MATRIX_TYPING_HEATMAP
     // #define ENABLE_RGB_MATRIX_DIGITAL_RAIN
     // enabled only of RGB_MATRIX_KEYPRESSES or RGB_MATRIX_KEYRELEASES is defined
-    // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-    // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE
+    #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+    #define ENABLE_RGB_MATRIX_SOLID_REACTIVE
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
     // #define ENABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-    // #define ENABLE_RGB_MATRIX_SPLASH
+    #define ENABLE_RGB_MATRIX_SPLASH
     // #define ENABLE_RGB_MATRIX_MULTISPLASH
-    // #define ENABLE_RGB_MATRIX_SOLID_SPLASH
+    #define ENABLE_RGB_MATRIX_SOLID_SPLASH
     // #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
