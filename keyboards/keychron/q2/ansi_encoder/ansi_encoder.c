@@ -17,8 +17,8 @@
 #include "quantum.h"
 
 #ifdef RGB_MATRIX_ENABLE
-const snled27351_led_t PROGMEM g_snled27351_leds[SNLED27351_LED_COUNT] = {
-/* Refer to SNLED27351 manual for these locations
+const ckled2001_led PROGMEM g_ckled2001_leds[RGB_MATRIX_LED_COUNT] = {
+/* Refer to CKLED manual for these locations
  *   driver
  *   |  R location
  *   |  |       G location
@@ -97,4 +97,80 @@ const snled27351_led_t PROGMEM g_snled27351_leds[SNLED27351_LED_COUNT] = {
     {1, F_16,   D_16,   E_16},
 };
 
+#define __ NO_LED
+
+led_config_t g_led_config = {
+    {
+        // Key Matrix to LED Index
+        { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14 },
+        { 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 },
+        { 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 65, 42, 43 },
+        { 44, __, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, __, 55, 56 },
+        { 57, 58, 59, __, __, __, 60, __, __, __, 61, 62, 63, 64, 66 }
+    },
+    {
+        // LED Index to Physical Position
+        {0,0},  {15,0},  {29,0},  {44,0},  {59,0},  {73,0},  {88,0},  {103,0},  {118,0},  {132,0},  {147,0},  {162,0},  {176,0},  {198,0},            {224,0},
+        {4,15}, {22,15}, {37,15}, {51,15}, {66,15}, {81,15}, {95,15}, {110,15}, {125,15}, {140,15}, {154,15}, {169,15}, {184,15}, {202,15},           {224,15},
+        {6,30}, {26,30}, {40,30}, {55,30}, {70,30}, {84,30}, {99,30}, {114,30}, {129,30}, {143,30}, {158,30}, {173,30},           {196,30},           {224,30},
+        {9,45},          {33,45}, {48,45}, {62,45}, {77,45}, {92,45}, {106,45}, {121,45}, {136,45}, {151,45}, {165,45},           {185,45}, {209,49},
+        {2,60}, {20,60}, {39,60},                            {94,60},                               {147,60}, {162,60}, {176,60}, {195,64}, {209,64}, {224,64}
+    },
+    {
+        // RGB LED Index to Flag
+        1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,    1,
+        1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1,    1,
+        1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,    1,    1,
+        1,    4, 4, 4, 4, 4, 4, 4, 4, 4, 4,    1, 1,
+        1, 1, 1,          4,          1, 1, 1, 1, 1, 1
+    }
+};
+
 #endif // RGB_MATRIX_ENABLE
+
+bool super_fill_key_down = false;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+    switch (keycode) {
+        case KC_LOCK_SCREEN:
+                if (record->event.pressed) {
+                    SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_Q) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_Q));
+                }
+                return false; /* Skip all further processing of this key */
+
+            case KC_DUAL_AUTH:
+                if (record->event.pressed) {
+                    SEND_STRING("kinit -f && mwinit -o");
+                }
+                return false;
+
+            case KC_DCV_CONNECT:
+                if (record->event.pressed) {
+                    SEND_STRING("python C:\\Users\\joyajj\\dcv\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
+                }
+                return false;  
+
+            case KC_SUPER_FILL: {
+                if (record->event.pressed) {
+                    super_fill_key_down = true;
+                } else { // Release the key
+                    super_fill_key_down = false;
+                }
+                return true;
+                break;
+                }
+    default:
+            return true;
+    }
+}
+
+#define REPEAT_DELAY 250
+#define REPEAT_TERM 
+
+void matrix_scan_user(void) {
+  if (super_fill_key_down) {
+    SEND_STRING(SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_DOWN(X_LCTL) SS_DOWN(X_V) SS_UP(X_LCTL) SS_UP(X_V));
+  } else {
+  }
+}

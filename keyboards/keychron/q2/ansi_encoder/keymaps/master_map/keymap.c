@@ -25,61 +25,6 @@ enum layers{
     _FN3
 };
 
-enum my_keycodes {
-    KC_LOCK_SCREEN = SAFE_RANGE,
-    KC_SUPER_FILL,
-    KC_DUAL_AUTH,
-    KC_DCV_CONNECT,
-};
-
-// MACROS
-
-// bool super_fill_key_down = false;
-
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//   switch (keycode) {
-
-//         case KC_LOCK_SCREEN:
-//             if (record->event.pressed) {
-//                 SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_Q) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_Q));
-//             }
-//             return false; /* Skip all further processing of this key */
-//         case KC_DUAL_AUTH:
-//             if (record->event.pressed) {
-//                 SEND_STRING("kinit -f && mwinit -o");
-//             }
-//             return false;
-//         case KC_DCV_CONNECT:
-//             if (record->event.pressed) {
-//                 SEND_STRING("python C:\\Users\\joyajj\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
-//             }
-//             return false;  
-//         case KC_SUPER_FILL: {
-//             if (record->event.pressed) {
-//                 super_fill_key_down = true;
-//             } else { // Release the key
-//                 super_fill_key_down = false;
-//             }
-//             return true;  
-//             break;
-//             }       
-//     default: 
-//             return true; /* Process all other keycodes normally */
-//     }
-// }
-
-// TIMER
-
-// #define REPEAT_DELAY 250
-// #define REPEAT_TERM 15
-
-// void matrix_scan_user(void) {
-//   if (super_fill_key_down) {
-//     SEND_STRING(SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_DOWN(X_LCTL) SS_DOWN(X_V) SS_UP(X_LCTL) SS_UP(X_V));
-//   } else {
-//   }
-// }
-
 // COMBOS
 
 const uint16_t PROGMEM grave_ctrl [] = {MO(_FN1), MO(_FN3), COMBO_END};
@@ -90,10 +35,7 @@ combo_t key_combos[] = {
   COMBO(grave_ctrl, KC_LCTL),     // Pressing these two keys at the same time will activate a grave control function while maintaining individual function keys
 };
 
-#define KC_WAVE S(KC_GRV)
-#define KC_SPFL KC_SUPER_FILL
-#define KC_DATH KC_DUAL_AUTH
-#define KC_DCVC KC_DCV_CONNECT
+
 
 //LIGHTING
 
@@ -127,8 +69,8 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_ansi_67(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,  KC_EQL,   KC_BSPC,          KC_MUTE,
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,  KC_RBRC,  KC_BSLS,          KC_PGUP,
-        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,            KC_ENT,           KC_PGDN,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,  KC_RBRC,  KC_BSLS,          KC_HOME,
+        KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,            KC_ENT,           KC_END,
         KC_LSFT,          KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,            KC_RSFT, KC_UP,
         KC_LCTL, KC_LOPT, KC_LCMD,                            KC_SPC,                             KC_RCMD, MO(_FN1), MO(_FN3), KC_LEFT, KC_DOWN, KC_RGHT),
 
@@ -167,7 +109,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [WIN_BASE] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [_FN1]     = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
     [_FN2]     = { ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
-    [_FN3]     = { ENCODER_CCW_CW(KC_WH_L, KC_WH_R) },
+    [_FN3]     = { ENCODER_CCW_CW(RCS(KC_TAB), C(KC_TAB)) },
 };
 #endif
 
@@ -179,25 +121,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// bool encoder_update_user(uint8_t index, bool clockwise) {
-    
-//   switch (get_highest_layer(layer_state)) {
-//       case MAC_BASE:
-//           if (clockwise) {
-//               tap_code(KC_VOLU); //VOLUME UP 
-//           } else {
-//               tap_code(KC_VOLD); // VOLUME DOWN
-//           }
-//           break;
-//       case _FN3:
-//           if (clockwise) {
-//               tap_code16(C(KC_TAB)); //TAB FORWARD IN SAFARI 
-//           } else {
-//               tap_code16(RCS(KC_TAB)); //TAB BACKWARDS IN SAFARI 
-//           }
-//           break;
-          
-//   }
-//     return false;
-
-// }
