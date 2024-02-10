@@ -35,13 +35,20 @@ enum custom_keycodes {
     KC_TASK_VIEW,
     KC_FILE_EXPLORER,
     KC_SCREEN_SHOT,
-    KC_CORTANA
+    KC_CORTANA,
+    KC_LOCK_SCREEN,
+    KC_SUPER_FILL,
+    KC_DUAL_AUTH,
+    KC_DCV_CONNECT
 };
 
 #define KC_TASK KC_TASK_VIEW
 #define KC_FLXP KC_FILE_EXPLORER
 #define KC_SNAP KC_SCREEN_SHOT
 #define KC_CRTA KC_CORTANA
+#define KC_SPFL KC_SUPER_FILL
+#define KC_DATH KC_DUAL_AUTH
+#define KC_DCVC KC_DCV_CONNECT
 
 typedef struct PACKED {
     uint8_t len;

@@ -16,25 +16,10 @@
 
 #pragma once
 
-#define MATRIX_UNSELECT_DRIVE_HIGH
+/* RGB Matrix Configuration */
+#define DRIVER_1_LED_TOTAL 34
+#define DRIVER_2_LED_TOTAL 33
+#define RGB_MATRIX_LED_COUNT (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL)
 
-/* DIP switch */
-#define DIP_SWITCH_MATRIX_GRID  { {4, 4} }
-
-/* RGB Matrix Driver Configuration */
-#define SNLED27351_I2C_ADDRESS_1 SNLED27351_I2C_ADDRESS_VDDIO
-#define SNLED27351_I2C_ADDRESS_2 SNLED27351_I2C_ADDRESS_GND
-
-#define SNLED27351_PHASE_CHANNEL SNLED27351_SCAN_PHASE_9_CHANNEL
-
-/* Disable DIP switch in matrix data */
-#define MATRIX_MASKED
-
-/* turn off effects when suspended */
-#define RGB_MATRIX_SLEEP
-
-/* Encoder Configuration*/
+/* Encoder used pins */
 #define ENCODER_DEFAULT_POS 0x3
-
-#define RGB_MATRIX_KEYPRESSES
-#define RGB_MATRIX_FRAMEBUFFER_EFFECTS
