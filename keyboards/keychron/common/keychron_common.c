@@ -39,8 +39,6 @@ void housekeeping_task_keychron(void) {
     }
 }
 
-bool super_fill_key_down = false;
-
 bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case QK_KB_0:
@@ -93,41 +91,7 @@ bool process_record_keychron(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;  // Skip all further processing of this key
-        case KC_LOCK_SCREEN:
-            if (record->event.pressed) {
-                SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_Q) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_Q));
-            }
-            return false; /* Skip all further processing of this key */
-        case KC_DUAL_AUTH:
-            if (record->event.pressed) {
-                SEND_STRING("kinit -f && mwinit -o");
-            }
-            return false;
-        case KC_DCV_CONNECT:
-            if (record->event.pressed) {
-                SEND_STRING("python C:\\Users\\joyajj\\dcv\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
-            }
-            return false;  
-        case KC_SUPER_FILL: {
-            if (record->event.pressed) {
-                super_fill_key_down = true;
-            } else { // Release the key
-                super_fill_key_down = false;
-            }
-            return true;
-            break;
-            }
         default:
             return true;  // Process all other keycodes normally
     }
-}
-
-#define REPEAT_DELAY 250
-#define REPEAT_TERM 
-
-void matrix_scan_user(void) {
-  if (super_fill_key_down) {
-    SEND_STRING(SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_DOWN(X_LCTL) SS_DOWN(X_V) SS_UP(X_LCTL) SS_UP(X_V));
-  } else {
-  }
 }

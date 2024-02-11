@@ -25,6 +25,10 @@ enum layers{
     _FN3
 };
 
+#define KC_SPFL KC_SUPER_FILL
+#define KC_DATH KC_DUAL_AUTH
+#define KC_DCVC KC_DCV_CONNECT
+
 // COMBOS
 
 const uint16_t PROGMEM grave_ctrl [] = {MO(_FN1), MO(_FN3), COMBO_END};
@@ -96,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                            _______,                            _______, _______,  _______,   _______, _______, _______),
 
     [_FN3] = LAYOUT_ansi_67(
-        KC_WAVE, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,    _______,          _______,
+        KC_GRV, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,   KC_F12,    _______,          _______,
         RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI, _______, _______, _______, _______, _______, _______,  _______,   _______,          KC_HOME,
         _______, RGB_RMOD,RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD, _______, _______, KC_DATH, _______, _______, _______,             KC_HOME,           KC_END,
         _______,          _______, _______, KC_DCVC, KC_SPFL, _______, _______, _______, _______, _______, _______,             KC_END,  LCMD(KC_UP),
@@ -113,11 +117,53 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_record_keychron(keycode, record)) {
-        return false;
-    }
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//     if (!process_record_keychron(keycode, record)) {
+//         return false;
+//     }
 
-    return true;
+//     return true;
+// }
+
+bool super_fill_key_down = false;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case KC_LOCK_SCREEN:
+            if (record->event.pressed) {
+                SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_Q) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_Q));
+            }
+            return false; /* Skip all further processing of this key */
+        case KC_DUAL_AUTH:
+            if (record->event.pressed) {
+                SEND_STRING("kinit -f && mwinit -o");
+            }
+            return false;
+        case KC_DCV_CONNECT:
+            if (record->event.pressed) {
+                SEND_STRING("python C:\\Users\\joyajj\\dcv\\dcv-cdd.py connect joyajj-clouddesk.aka.corp.amazon.com");
+            }
+            return false;  
+        case KC_SUPER_FILL: {
+            if (record->event.pressed) {
+                super_fill_key_down = true;
+            } else { // Release the key
+                super_fill_key_down = false;
+            }
+            return true;
+            break;
+            }
+        default:
+            return true;  // Process all other keycodes normally
+    }
 }
 
+#define REPEAT_DELAY 250
+#define REPEAT_TERM 
+
+void matrix_scan_user(void) {
+  if (super_fill_key_down) {
+    SEND_STRING(SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_TAP(X_TAB) SS_DOWN(X_LCTL) SS_DOWN(X_V) SS_UP(X_LCTL) SS_UP(X_V));
+  } else {
+  }
+}
