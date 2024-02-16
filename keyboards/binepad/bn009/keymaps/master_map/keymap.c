@@ -16,93 +16,115 @@
 
 #include QMK_KEYBOARD_H
 
+bool is_alt_tab_active = false; 
+uint16_t alt_tab_timer = 0;  
 
-enum my_keycodes {
-    KC_MISSION_CONTROL = SAFE_RANGE,
-    KC_LAUNCHPAD,
-    KC_LOCK_SCREEN
+enum custom_keycodes {
+    LOCK_SCREEN = SAFE_RANGE,
+    WINDOWS_LOCK_SCREEN,
+    QUICK_ADD,
+    CMD_TAB,
+    CMD_TAB_INV,
+    ALT_TAB,
+    ALT_TAB_INV
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-
-        case KC_MISSION_CONTROL:
+        case QUICK_ADD:
             if (record->event.pressed) {
-                host_consumer_send(0x29F);
-            } else {
-                host_consumer_send(0);
+                SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_A) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_A));
             }
-            return false; /* Skip all further processing of this key */
-
-        case KC_LAUNCHPAD:
-            if (record->event.pressed) {
-                host_consumer_send(0x2A0);
-            } else {
-                host_consumer_send(0);
-            }
-            return false; /* Skip all further processing of this key */
-
-         case KC_LOCK_SCREEN:
+            return false;
+         case LOCK_SCREEN:
             if (record->event.pressed) {
                 SEND_STRING(SS_DOWN(X_LCTL) SS_DOWN(X_LCMD) SS_DOWN(X_Q) SS_UP(X_LCTL) SS_UP(X_LCMD) SS_UP(X_Q));
             }
             return false; /* Skip all further processing of this key */
-        default: 
-            return true; /* Process all other keycodes normally */
-
+        case WINDOWS_LOCK_SCREEN:
+            if (record->event.pressed) {
+                SEND_STRING(SS_DOWN(X_LGUI) SS_DOWN(X_L) SS_UP(X_LGUI) SS_UP(X_L));
+            }
+            return false; /* Skip all further processing of this key */
+        case CMD_TAB:
+            if (record->event.pressed) {
+              if (!is_alt_tab_active) {
+                is_alt_tab_active = true;
+                register_code(KC_LGUI);
+              }
+              alt_tab_timer = timer_read();
+              register_code(KC_TAB);
+            } else {
+              unregister_code(KC_TAB);
+            }
+            break;
+        case CMD_TAB_INV:
+            if (record->event.pressed) {
+              if (!is_alt_tab_active) {
+                is_alt_tab_active = true;
+                register_code(KC_LGUI);
+                register_code(KC_LSFT);
+              }
+              alt_tab_timer = timer_read();
+              register_code(KC_TAB);
+            } else {
+              unregister_code(KC_TAB);
+            }
+            break;
+        case ALT_TAB:
+            if (record->event.pressed) {
+              if (!is_alt_tab_active) {
+                is_alt_tab_active = true;
+                register_code(KC_LALT);
+              }
+              alt_tab_timer = timer_read();
+              register_code(KC_TAB);
+            } else {
+              unregister_code(KC_TAB);
+            }
+            break;
+        case ALT_TAB_INV:
+            if (record->event.pressed) {
+              if (!is_alt_tab_active) {
+                is_alt_tab_active = true;
+                register_code(KC_LALT);
+                register_code(KC_LSFT);
+              }
+              alt_tab_timer = timer_read();
+              register_code(KC_TAB);
+            } else {
+              unregister_code(KC_TAB);
+            }
+            break;
     }
+    return true;
 }
 
+void matrix_scan_user(void) { // The very important timer.
+  if (is_alt_tab_active) {
+    if (timer_elapsed(alt_tab_timer) > 1000) {
+      unregister_code(KC_LGUI);
+      unregister_code(KC_LSFT);
+      is_alt_tab_active = false;
+    }
+  }
+}
 
-const uint16_t PROGMEM one_shot_layer1 [] = {C(KC_LEFT), LCMD(KC_SPC), COMBO_END};
-const uint16_t PROGMEM one_shot_layer2 [] = {LCMD(KC_SPC), C(KC_RIGHT), COMBO_END};
-const uint16_t PROGMEM previous_track [] = {KC_MISSION_CONTROL, LCMD(KC_C), COMBO_END};
-const uint16_t PROGMEM next_track [] = {KC_LAUNCHPAD, LCMD(KC_V), COMBO_END};
-const uint16_t PROGMEM lock_screen [] = {C(KC_LEFT), LCMD(KC_SPC), C(KC_RGHT), COMBO_END};
-combo_t key_combos[COMBO_COUNT] = {
-	COMBO(one_shot_layer1, OSL(1)),		// This will enable layer 1 in one shot mode
-	COMBO(one_shot_layer2, OSL(2)),		// This will enable layer 2 in one shot mode
-    COMBO(previous_track, KC_MPRV),     // Previous track 
-    COMBO(next_track, KC_MNXT),         // Next track
-    COMBO(lock_screen, KC_LOCK_SCREEN), // This combo will lock the screen 
+const uint16_t PROGMEM lock_screen [] = {CMD_TAB_INV, LCMD(KC_F3), CMD_TAB, COMBO_END};
+const uint16_t PROGMEM windows_lock_screen [] = {ALT_TAB_INV, LGUI(KC_D), ALT_TAB, COMBO_END};
+const uint16_t PROGMEM switch_layer1 [] = {LCMD(KC_C), LCMD(KC_V), CMD_TAB_INV, CMD_TAB, COMBO_END};
+const uint16_t PROGMEM switch_layer2 [] = {LCTL(KC_C), LCTL(KC_V), ALT_TAB_INV, ALT_TAB, COMBO_END};
+
+combo_t key_combos[] = {
+  COMBO(lock_screen, LOCK_SCREEN),
+  COMBO(windows_lock_screen, WINDOWS_LOCK_SCREEN),
+  COMBO(switch_layer1, TO(1)),
+  COMBO(switch_layer1, TO(0))
 };
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
-
-/* LAYER 0
-     * ,-----------------------.         
-     * |       |       |       |                
-     * |-------+-------+-------|
-     * |       |       |       |               
-     * |-------+-------+-------|
-     * |   +   |   +   |       |  This combo enables layer 1 in one shot mode       
-     * `-----------------------'              
-     *
-     * ,-----------------------.         
-     * |       |       |       |                
-     * |-------+-------+-------|
-     * |       |       |       |               
-     * |-------+-------+-------|
-     * |       |   +   |   +   |  This combo enables layer 2 in one shot mode       
-     * `-----------------------'               
-     *
-     * ,-----------------------.         
-     * |       |       |   +   |                
-     * |-------+-------+-------|
-     * |       |       |   +   |               
-     * |-------+-------+-------|
-     * |       |       |       |  This combo enables next track       
-     * `-----------------------'               
-     *
-     * ,-----------------------.         
-     * |   +   |       |       |                
-     * |-------+-------+-------|
-     * |   +   |       |       |               
-     * |-------+-------+-------|
-     * |       |       |       |  This combo enables previous track        
-     * `-----------------------'               
+/* LAYER 0               
      *
      * ,-----------------------.         
      * |       |       |       |                
@@ -115,50 +137,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,-----------------------.            
      * |  COPY |  MOOM | PASTE |                
      * |-------+-------+-------|
-     * |MSN CTL|  PLAY |LNCHPAD|               
+     * |CLS TAB|QCK ADD|NEW TAB|               
      * |-------+-------+-------|
-     * |<- DSK | SPTLT |  DSK->|               
+     * |APP <- |CLR DSK|APP -> |               
      * `-----------------------'               
      */
     
-	[0] = LAYOUT(
+	[0] = LAYOUT_ortho_3x3(
       LCMD(KC_C), SCMD(KC_UP), LCMD(KC_V), 
-      KC_MISSION_CONTROL, KC_MPLY, KC_LAUNCHPAD,
-      C(KC_LEFT), LCMD(KC_SPC), C(KC_RGHT)
-      ),
+      LCMD(KC_W), QUICK_ADD, LCMD(KC_T),
+      CMD_TAB_INV, LCMD(KC_F3), CMD_TAB
+    ),
 
 	
 /* LAYER 1
-     * ,-----------------------.
-     * |  COPY |LK SCRN| PASTE |  
+     *
+     * ,-----------------------.         
+     * |       |       |       |                
      * |-------+-------+-------|
-     * |SCRNSHT|QK DRFT| SLEEP |
+     * |       |       |       |               
      * |-------+-------+-------|
-     * | QUIT  |  PREF |MINIMIZ|
-     * `-----------------------'
+     * |   +   |   +   |   +   |  This combo locks the screen       
+     * `-----------------------'               
+     *
+     *
+     * ,-----------------------.            
+     * |  COPY |  MOOM | PASTE |                
+     * |-------+-------+-------|
+     * |CLS TAB|QCK ADD|NEW TAB|               
+     * |-------+-------+-------|
+     * |APP <- |CLR DSK|APP -> |               
+     * `-----------------------'               
      */
     
-    [1] = LAYOUT(
-      LCMD(KC_C), KC_LOCK_SCREEN, LCMD(KC_V), 
-      SCMD(KC_3), SCMD(KC_2), KC_SLEP, 
-      LCMD(KC_Q), LCMD(KC_COMM), LCMD(KC_M)
-      ),
-
-	
-/* LAYER 2 (SAFARI)
-     * ,-----------------------.
-     * |  COPY |NEW TAB| PASTE |  
-     * |-------+-------+-------|
-     * |TAB PRV|TAB VU |TAB FWD|
-     * |-------+-------+-------|
-     * |+RD LST| SEARCH|DEL TAB|
-     * `-----------------------'
-     */
-    
-    [2] = LAYOUT(
-      LCMD(KC_C), LCMD(KC_T), LCMD(KC_V), 
-      RCS(KC_TAB), SCMD(KC_BSLS), C(KC_TAB), 
-      RCS(KC_D), LCMD(KC_F), LCMD(KC_W)
-      )
-
+    [1] = LAYOUT_ortho_3x3(
+      LCTL(KC_C), LGUI(KC_UP), LCTL(KC_V), 
+      LCTL(KC_W), LCTL(KC_SPC), LCTL(KC_T), 
+      ALT_TAB_INV, LGUI(KC_D), ALT_TAB
+    )
 };
+

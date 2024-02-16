@@ -3,9 +3,6 @@
 
 #include QMK_KEYBOARD_H
 
-// enum my_keycodes {
-
-// }
 
 #define _HOME 0
 #define _OBSIDIAN 1
@@ -31,17 +28,6 @@ enum combos {
     DNLYR_2,
     DNLYR_1
 };
-
-//LIGHTING
-
-// bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-//     if (host_keyboard_led_state().caps_lock) {
-//         RGB_MATRIX_INDICATOR_SET_COLOR(5, 255, 255, 255); // assuming caps lock is at led #5
-//     } else {
-//         RGB_MATRIX_INDICATOR_SET_COLOR(5, 0, 0, 0);
-//     }
-//     return false;
-// }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     for (uint8_t i = led_min; i < led_max; i++) {

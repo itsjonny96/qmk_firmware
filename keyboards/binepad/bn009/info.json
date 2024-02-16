@@ -3,12 +3,12 @@
   "keyboard_name": "BN009",
   "maintainer": "binepad",
   "features": {
-      "bootmagic": true,
+      "bootmagic": false,
       "command": false,
       "console": false,
       "extrakey": true,
       "mousekey": true,
-      "nkro": false
+      "force_nkro": true
   },
   "url": "http://binepad.com",
   "usb": {
