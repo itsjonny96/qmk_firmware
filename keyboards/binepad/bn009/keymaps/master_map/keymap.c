@@ -15,9 +15,13 @@
 	  */ 
 
 #include QMK_KEYBOARD_H
+#include "print.h"
 
+bool is_cmd_tab_active = false; 
 bool is_alt_tab_active = false; 
+uint16_t cmd_tab_timer = 0;  
 uint16_t alt_tab_timer = 0;  
+
 
 enum custom_keycodes {
     LOCK_SCREEN = SAFE_RANGE,
@@ -28,6 +32,26 @@ enum custom_keycodes {
     ALT_TAB,
     ALT_TAB_INV
 };
+
+const uint16_t PROGMEM lock_screen [] = {CMD_TAB_INV, LCMD(KC_F3), CMD_TAB, COMBO_END};
+const uint16_t PROGMEM windows_lock_screen [] = {ALT_TAB_INV, LGUI(KC_D), ALT_TAB, COMBO_END};
+const uint16_t PROGMEM switch_layer1 [] = {LCMD(KC_C), LCMD(KC_V), CMD_TAB_INV, CMD_TAB, COMBO_END};
+const uint16_t PROGMEM switch_layer2 [] = {LCTL(KC_C), LCTL(KC_V), ALT_TAB_INV, ALT_TAB, COMBO_END};
+
+combo_t key_combos[] = {
+  COMBO(lock_screen, LOCK_SCREEN),
+  COMBO(windows_lock_screen, WINDOWS_LOCK_SCREEN),
+  COMBO(switch_layer1, TO(1)),
+  COMBO(switch_layer1, TO(0)),
+};
+
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//   // If console is enabled, it will print the matrix position and status of each key pressed
+// #ifdef CONSOLE_ENABLE
+//     printf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+// #endif 
+//   return true;
+// }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
@@ -48,79 +72,79 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false; /* Skip all further processing of this key */
         case CMD_TAB:
             if (record->event.pressed) {
-              if (!is_alt_tab_active) {
-                is_alt_tab_active = true;
-                register_code(KC_LGUI);
-              }
-              alt_tab_timer = timer_read();
-              register_code(KC_TAB);
-            } else {
-              unregister_code(KC_TAB);
-            }
-            break;
+                if (!is_cmd_tab_active) {
+                    is_cmd_tab_active = true;
+                    register_code(KC_LGUI);
+                }
+                cmd_tab_timer = timer_read();
+                register_code(KC_TAB);
+                } else {
+                unregister_code(KC_TAB);
+                }
+                return true;
+                break;
         case CMD_TAB_INV:
             if (record->event.pressed) {
-              if (!is_alt_tab_active) {
-                is_alt_tab_active = true;
-                register_code(KC_LGUI);
-                register_code(KC_LSFT);
-              }
-              alt_tab_timer = timer_read();
-              register_code(KC_TAB);
-            } else {
-              unregister_code(KC_TAB);
-            }
-            break;
+                if (!is_cmd_tab_active) {
+                    is_cmd_tab_active = true;
+                    register_code(KC_LGUI);
+                    register_code(KC_LSFT);
+                }
+                cmd_tab_timer = timer_read();
+                register_code(KC_TAB);
+                } else {
+                unregister_code(KC_TAB);
+                }
+                return true;
+                break;
         case ALT_TAB:
             if (record->event.pressed) {
-              if (!is_alt_tab_active) {
-                is_alt_tab_active = true;
-                register_code(KC_LALT);
-              }
-              alt_tab_timer = timer_read();
-              register_code(KC_TAB);
-            } else {
-              unregister_code(KC_TAB);
-            }
-            break;
+                if (!is_alt_tab_active) {
+                    is_alt_tab_active = true;
+                    register_code(KC_LALT);
+                }
+                alt_tab_timer = timer_read();
+                register_code(KC_TAB);
+                } else {
+                unregister_code(KC_TAB);
+                }
+                return true;
+                break;
         case ALT_TAB_INV:
             if (record->event.pressed) {
-              if (!is_alt_tab_active) {
-                is_alt_tab_active = true;
-                register_code(KC_LALT);
-                register_code(KC_LSFT);
-              }
-              alt_tab_timer = timer_read();
-              register_code(KC_TAB);
-            } else {
-              unregister_code(KC_TAB);
-            }
-            break;
+                if (!is_alt_tab_active) {
+                    is_alt_tab_active = true;
+                    register_code(KC_LALT);
+                    register_code(KC_LSFT);
+                }
+                alt_tab_timer = timer_read();
+                register_code(KC_TAB);
+                } else {
+                unregister_code(KC_TAB);
+                }
+                return true;
+                break;
+        default:
+            return false;
     }
-    return true;
 }
 
 void matrix_scan_user(void) { // The very important timer.
+  if (is_cmd_tab_active) {
+    if (timer_elapsed(cmd_tab_timer) > 1000) {
+      unregister_code(KC_LGUI);
+      unregister_code(KC_LSFT);
+      is_cmd_tab_active = false;
+    }
+  }
   if (is_alt_tab_active) {
     if (timer_elapsed(alt_tab_timer) > 1000) {
-      unregister_code(KC_LGUI);
+      unregister_code(KC_LALT);
       unregister_code(KC_LSFT);
       is_alt_tab_active = false;
     }
   }
 }
-
-const uint16_t PROGMEM lock_screen [] = {CMD_TAB_INV, LCMD(KC_F3), CMD_TAB, COMBO_END};
-const uint16_t PROGMEM windows_lock_screen [] = {ALT_TAB_INV, LGUI(KC_D), ALT_TAB, COMBO_END};
-const uint16_t PROGMEM switch_layer1 [] = {LCMD(KC_C), LCMD(KC_V), CMD_TAB_INV, CMD_TAB, COMBO_END};
-const uint16_t PROGMEM switch_layer2 [] = {LCTL(KC_C), LCTL(KC_V), ALT_TAB_INV, ALT_TAB, COMBO_END};
-
-combo_t key_combos[] = {
-  COMBO(lock_screen, LOCK_SCREEN),
-  COMBO(windows_lock_screen, WINDOWS_LOCK_SCREEN),
-  COMBO(switch_layer1, TO(1)),
-  COMBO(switch_layer1, TO(0))
-};
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
